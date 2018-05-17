@@ -675,5 +675,11 @@ initializeSAMNamespace
 echo "********************************* Import SAM Template"
 TOPOLOGY_ID=$(importSAMTopology $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/recipes/ALARM_FATIGUE_DEMO_CONTROL/package/sam/AlarmFatigueRefApp.json AlarmFatigueRefApp)
 TOPOLOGY_COMPLEX_ID=$(importSAMTopology $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/recipes/ALARM_FATIGUE_DEMO_CONTROL/package/sam/AlarmFatigue-ComplexRules.json AlarmFatigueRefAppComplex)
+echo "********************************* Adding Symbolic Links to Atlas Client..."
+#Add symbolic links to Atlas Hooks
+rm -rf /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
+ln -s /usr/hdp/current/atlas-client/hook/storm/atlas-plugin-classloader-0.8.0.2.6.2.0-205.jar /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
+rm -rf /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
+ln -s /usr/hdp/current/atlas-client/hook/storm/storm-bridge-shim-0.8.0.2.6.2.0-205.jar /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
 echo "********************************* Deploy SAM Topology"
 deploySAMTopology "$TOPOLOGY_ID"	

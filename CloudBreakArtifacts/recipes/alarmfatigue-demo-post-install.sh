@@ -811,8 +811,9 @@ echo "*********************************ALARM_FATIGUE_STATUS Service Started..."
 
 echo "********************************* Adding Symbolic Links to Atlas Client..."
 #Add symbolic links to Atlas Hooks
-ln -s /usr/hdp/current/atlas-client/hook/storm/atlas-plugin-classloader-0.8.0.2.6.1.0-34.jar /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
-
-ln -s /usr/hdp/current/atlas-client/hook/storm/storm-bridge-shim-0.8.0.2.6.1.0-34.jar /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
+rm -rf /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
+ln -s /usr/hdp/current/atlas-client/hook/storm/atlas-plugin-classloader-0.8.0.2.6.2.0-205.jar /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
+rm -rf /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
+ln -s /usr/hdp/current/atlas-client/hook/storm/storm-bridge-shim-0.8.0.2.6.2.0-205.jar /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
 
 echo "Installation Complete"
