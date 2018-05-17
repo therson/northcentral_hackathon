@@ -921,7 +921,7 @@
           ],
           "notifierName": "Email Notifier",
           "outputFieldsAndDefaults": {
-            "from": "alarmfatiguedemo@gmail.com",
+            "from": "hwx.nc.demo@@gmail.com",
             "to": "${DoctorEmail}",
             "body": "${HealthProviderName},\n\nPatient ${PatientName} in location ${PatLocation} has an abnormal Pulse Rate of ${PulseRate_AVG}. \n\nDiagnosis: ${DiagnosisDescription}\n\nOther Patient Stats:\nTemperature: ${BodyTemperature_AVG}\nRespiration: ${Respiration_AVG}\nBlood Pressure: ${BloodPressureSystolic_AVG} / ${BloodPressureDiastolic_AVG}\n",
             "contentType": "text/plain",
