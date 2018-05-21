@@ -1,3 +1,2 @@
-2017-10-20 20:39:16	2017-10-24 02:16:03	2	alarm-fatigue-all-events-cube	0	0			\N	druid-ambari	1	1	0	\N	[druid-ambari].[alarm-fatigue-all-events-cube](id:2)
-2017-10-20 21:53:35	2017-10-20 21:53:35	3	device-events-cube2	0	0	\N	\N	\N	druid-ambari	1	1	0	\N	[druid-ambari].[device-events-cube2](id:3)
-2017-10-23 17:02:21	2017-10-23 17:02:21	5	device-event-alerts-cube	0	0	\N	\N	\N	druid-ambari	1	1	0	\N	[druid-ambari].[device-event-alerts-cube](id:5)
+2018-05-18 14:35:01	2018-05-18 14:37:10	1	alarm-fatigue-all-events-cube	0	0			\N	druid-ambari	1	1	0	\N	[druid-ambari].[alarm-fatigue-all-events-cube](id:1)
+2018-05-18 14:35:03	2018-05-18 14:39:15	2	device-event-alerts-cube	0	0			\N	druid-ambari	1	1	0	\N	[druid-ambari].[device-event-alerts-cube](id:2)

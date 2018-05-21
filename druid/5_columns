@@ -1,0 +1,26 @@
+2018-05-18 14:35:03	2018-05-18 14:35:03	1	alarm-fatigue-all-events-cube	PatientName	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:35:03	2	alarm-fatigue-all-events-cube	DeviceId	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:36:19	3	alarm-fatigue-all-events-cube	BloodPressureSystolic_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:03	2018-05-18 14:36:28	4	alarm-fatigue-all-events-cube	BodyTemperature_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:03	2018-05-18 14:36:47	5	alarm-fatigue-all-events-cube	BloodPressureDiastolic_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:03	2018-05-18 14:35:03	6	alarm-fatigue-all-events-cube	count	1	LONG	0	0	0	0	0	0	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:35:03	7	alarm-fatigue-all-events-cube	__time	1	LONG	0	0	0	0	0	0	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:35:03	8	alarm-fatigue-all-events-cube	DeviceGUID	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:35:03	9	alarm-fatigue-all-events-cube	DoctorEmail	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:36:10	10	alarm-fatigue-all-events-cube	Respiration_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:03	2018-05-18 14:35:03	11	alarm-fatigue-all-events-cube	PatLocation	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:35:03	12	alarm-fatigue-all-events-cube	HealthProviderName	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:36:38	13	alarm-fatigue-all-events-cube	PulseRate_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:03	2018-05-18 14:35:03	14	device-event-alerts-cube	PatientName	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:35:03	15	device-event-alerts-cube	DeviceId	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:03	2018-05-18 14:38:07	16	device-event-alerts-cube	BloodPressureSystolic_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:03	2018-05-18 14:38:52	17	device-event-alerts-cube	BodyTemperature_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:04	2018-05-18 14:38:59	18	device-event-alerts-cube	BloodPressureDiastolic_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:04	2018-05-18 14:35:04	19	device-event-alerts-cube	count	1	LONG	0	0	0	0	0	0	\N	1	1	0	\N
+2018-05-18 14:35:04	2018-05-18 14:35:04	20	device-event-alerts-cube	__time	1	LONG	0	0	0	0	0	0	\N	1	1	0	\N
+2018-05-18 14:35:04	2018-05-18 14:35:04	21	device-event-alerts-cube	DeviceGUID	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:04	2018-05-18 14:35:04	22	device-event-alerts-cube	DoctorEmail	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:04	2018-05-18 14:37:59	23	device-event-alerts-cube	Respiration_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
+2018-05-18 14:35:04	2018-05-18 14:35:04	24	device-event-alerts-cube	PatLocation	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:04	2018-05-18 14:35:04	25	device-event-alerts-cube	HealthProviderName	1	STRING	1	0	0	0	0	1	\N	1	1	0	\N
+2018-05-18 14:35:04	2018-05-18 14:39:08	26	device-event-alerts-cube	PulseRate_AVG	1	FLOAT	0	0	0	1	1	0		1	1	0	
