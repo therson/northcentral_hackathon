@@ -723,6 +723,7 @@ fi
 sleep 2
 
 echo "*********************************Starting Druid"
+echo "Druid Status is $DRUID_STATUS"
 if [[ $DRUID_STATUS == INSTALLED ]]; then
         echo "*********************************Druid is installed -- Starting Druid"
        	startService DRUID
@@ -745,6 +746,7 @@ fi
 
 sleep 2
 echo "*********************************Checking if Registry is Installed"
+echo "Registry Status is $REGISTRY_STATUS"
 if [[ $REGISTRY_STATUS == INSTALLED ]]; then
         echo "*********************************Registry is Installed -- Starting"
        	startService REGISTRY
@@ -767,6 +769,7 @@ fi
 
 sleep 2
 echo "********************************Checking if SAM is Installed"
+echo "Streamline Status is $STREAMLINE_STATUS"
 if [[ $STREAMLINE_STATUS == INSTALLED ]]; then
         echo "********************************SAM is Installed -- Starting"
        	startService STREAMLINE
@@ -788,6 +791,7 @@ if ! [[ $NIFI_STATUS == STARTED || $NIFI_STATUS == INSTALLED ]]; then
 fi
 
 sleep 2
+echo "NiFi Status is $NIFI_STATUS"
 echo "*********************************Checking if NiFi is Installed"
 if [[ $NIFI_STATUS == INSTALLED ]]; then
         echo "*********************************NiFi is Installed -- Starting"
