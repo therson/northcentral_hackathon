@@ -92,7 +92,7 @@ getServiceStatus () {
        	SERVICE=$1
        	SERVICE_STATUS=$(curl -u admin:admin -X GET http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/$SERVICE | grep '"state" :' | grep -Po '([A-Z]+)')
 
-       	echo "*********************************$SERVICE STATUS IS $SERVICE_STATUS"
+       	#echo "*********************************$SERVICE STATUS IS $SERVICE_STATUS"
 }
 
 waitForService () {
