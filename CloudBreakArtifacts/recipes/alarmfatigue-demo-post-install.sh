@@ -76,11 +76,14 @@ waitForAmbari () {
 
 serviceExists () {
        	SERVICE=$1
+        echo "*********************************Getting Service Status"
        	SERVICE_STATUS=$(curl -u admin:admin -X GET http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/$SERVICE | grep '"status" : ' | grep -Po '([0-9]+)')
-
+        echo "*********************************$SERVICE STATUS IS $SERVICE_STATUS"
        	if [ "$SERVICE_STATUS" == 404 ]; then
+          echo "$SERVICE NOT FOUND -- 404 ERROR"
        		echo 0
        	else
+          Echo "$SERVICE FOUND"
        		echo 1
        	fi
 }
@@ -89,7 +92,7 @@ getServiceStatus () {
        	SERVICE=$1
        	SERVICE_STATUS=$(curl -u admin:admin -X GET http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/$SERVICE | grep '"state" :' | grep -Po '([A-Z]+)')
 
-       	echo $SERVICE_STATUS
+       	echo "*********************************$SERVICE STATUS IS $SERVICE_STATUS"
 }
 
 waitForService () {
@@ -119,9 +122,11 @@ waitForServiceToStart () {
        	echo "$SERVICE STATUS: $SERVICE_STATUS"
        	LOOPESCAPE="false"
        	if ! [[ "$SERVICE_STATUS" == STARTED ]]; then
+          echo "*********************************$SERVICE is not started -- starting loop"
         	until [ "$LOOPESCAPE" == true ]; do
                 SERVICE_STATUS=$(curl -u admin:admin -X GET http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/$SERVICE | grep '"state" :' | grep -Po '([A-Z]+)')
             if [[ "$SERVICE_STATUS" == STARTED ]]; then
+                echo "*********************************$SERVICE started -- exiting loop"
                 LOOPESCAPE="true"
             fi
             echo "*********************************$SERVICE Status: $SERVICE_STATUS"
@@ -266,13 +271,13 @@ installStreamlineService () {
        	echo "*********************************Creating STREAMLINE configuration..."
 
        	# Create and apply configuration
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline-common $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-common.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline-common $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-common.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-env.json
 
-	/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline-log4j $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-log4j.json
+	      /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline-log4j $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-log4j.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline_jaas_conf $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline_jaas_conf.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME streamline_jaas_conf $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline_jaas_conf.json
 		
        	echo "*********************************Adding STREAMLINE SERVER role to Host..."
        	# Add STREAMLINE SERVER role to Ambari Host
@@ -283,7 +288,7 @@ installStreamlineService () {
        	# Install STREAMLINE Service
        	TASKID=$(curl -u admin:admin -H "X-Requested-By:ambari" -i -X PUT -d '{"RequestInfo": {"context" :"Install SAM"}, "Body": {"ServiceInfo": {"maintenance_state" : "OFF", "state": "INSTALLED"}}}' http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/STREAMLINE | grep "id" | grep -Po '([0-9]+)')
 		
-		sleep 2       	
+		    sleep 2       	
        	if [ -z $TASKID ]; then
        		until ! [ -z $TASKID ]; do
        			TASKID=$(curl -u admin:admin -H "X-Requested-By:ambari" -i -X PUT -d '{"RequestInfo": {"context" :"Install SAM"}, "Body": {"ServiceInfo": {"maintenance_state" : "OFF", "state": "INSTALLED"}}}' http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/STREAMLINE | grep "id" | grep -Po '([0-9]+)')
@@ -303,10 +308,10 @@ installStreamlineService () {
                	sleep 2
        	done
        	
-	rm -f /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
-	rm -f /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
-	ln -s /usr/hdp/current/atlas-client/hook/storm/atlas-plugin-classloader-0.8.0.2.6.1.0-129.jar /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
-	ln -s /usr/hdp/current/atlas-client/hook/storm/storm-bridge-shim-0.8.0.2.6.1.0-129.jar /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
+	      rm -f /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
+	      rm -f /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
+	      ln -s /usr/hdp/current/atlas-client/hook/storm/atlas-plugin-classloader-0.8.0.2.6.2.0-205.jar /usr/hdf/current/storm-client/lib/atlas-plugin-classloader.jar
+	      ln -s /usr/hdp/current/atlas-client/hook/storm/storm-bridge-shim-0.8.0.2.6.2.0-205.jar /usr/hdf/current/storm-client/lib/storm-bridge-shim.jar
 }
 
 installNifiService () {
@@ -318,44 +323,44 @@ installNifiService () {
        	echo "*********************************Adding NIFI MASTER component..."
        	# Add NIFI Master component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/NIFI/components/NIFI_MASTER
-		curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/NIFI/components/NIFI_CA
+		    curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/NIFI/components/NIFI_CA
 		
        	sleep 2
        	echo "*********************************Creating NIFI configuration..."
 
        	# Create and apply configuration
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-ambari-config $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-ambari-config.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-ambari-config $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-ambari-config.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-ambari-ssl-config $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-ambari-ssl-config.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-ambari-ssl-config $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-ambari-ssl-config.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-authorizers-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-authorizers-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-authorizers-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-authorizers-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-bootstrap-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-bootstrap-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-bootstrap-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-bootstrap-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-bootstrap-notification-services-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-bootstrap-notification-services-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-bootstrap-notification-services-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-bootstrap-notification-services-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-flow-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-flow-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-flow-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-flow-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-login-identity-providers-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-login-identity-providers-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-login-identity-providers-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-login-identity-providers-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-node-logback-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-node-logback-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-node-logback-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-node-logback-env.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-properties $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-properties.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-properties $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-properties.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-state-management-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-state-management-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-state-management-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-state-management-env.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-jaas-conf $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-jaas-conf.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-jaas-conf $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-jaas-conf.json
 				
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-logsearch-conf $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-logsearch-conf.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME nifi-logsearch-conf $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/nifi-config/nifi-logsearch-conf.json
 		
        	echo "*********************************Adding NIFI MASTER role to Host..."
        	# Add NIFI Master role to Ambari Host
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/hosts/$AMBARI_HOST/host_components/NIFI_MASTER
 
        	echo "*********************************Adding NIFI CA role to Host..."
-		# Add NIFI CA role to Ambari Host
+		    # Add NIFI CA role to Ambari Host
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/hosts/$AMBARI_HOST/host_components/NIFI_CA
 
        	sleep 30
@@ -363,7 +368,7 @@ installNifiService () {
        	# Install NIFI Service
        	TASKID=$(curl -u admin:admin -H "X-Requested-By:ambari" -i -X PUT -d '{"RequestInfo": {"context" :"Install Nifi"}, "Body": {"ServiceInfo": {"maintenance_state" : "OFF", "state": "INSTALLED"}}}' http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/NIFI | grep "id" | grep -Po '([0-9]+)')
 		
-		sleep 2       	
+		    sleep 2       	
        	if [ -z $TASKID ]; then
        		until ! [ -z $TASKID ]; do
        			TASKID=$(curl -u admin:admin -H "X-Requested-By:ambari" -i -X PUT -d '{"RequestInfo": {"context" :"Install Nifi"}, "Body": {"ServiceInfo": {"maintenance_state" : "OFF", "state": "INSTALLED"}}}' http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/NIFI | grep "id" | grep -Po '([0-9]+)')
@@ -409,14 +414,14 @@ installDruidService () {
        	echo "*********************************Adding DRUID components..."
        	# Add DRUID BROKER component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID/components/DRUID_BROKER
-		sleep 2
-		# Add DRUID COORDINATOR component to service
+		    sleep 2
+		    # Add DRUID COORDINATOR component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID/components/DRUID_COORDINATOR
        	# Add DRUID HISTORICAL component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID/components/DRUID_HISTORICAL
        	# Add DRUID MIDDLEMANAGER component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID/components/DRUID_MIDDLEMANAGER
-		# Add DRUID OVERLORD component to service
+		    # Add DRUID OVERLORD component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID/components/DRUID_OVERLORD
        	# Add DRUID ROUTER component to service
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID/components/DRUID_ROUTER
@@ -429,31 +434,31 @@ installDruidService () {
        	# Create and apply configuration
        	/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-broker $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-broker.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-common $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-common.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-common $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-common.json
 
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-coordinator $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-coordinator.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-coordinator $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-coordinator.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-env.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-historical $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-historical.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-historical $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-historical.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-log4j $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-log4j.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-log4j $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-log4j.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-logrotate $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-logrotate.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-logrotate $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-logrotate.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-middlemanager $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-middlemanager.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-middlemanager $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-middlemanager.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-overlord $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-overlord.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-overlord $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-overlord.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-router $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-router.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-router $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-router.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-superset-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-superset-env.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-superset-env $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-superset-env.json
 		
-		/var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-superset $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-superset.json
+		    /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME druid-superset $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/druid-config/druid-superset.json
 		
-		export HOST1=$(getHostByPosition 1)
-		export HOST2=$(getHostByPosition 2)
-		export HOST3=$(getHostByPosition 3)			
+		    export HOST1=$(getHostByPosition 1)
+		    export HOST2=$(getHostByPosition 2)
+		    export HOST3=$(getHostByPosition 3)			
 		
        	echo "*********************************Adding DRUID BROKER role to Host..."
        	# Add DRUID BROKER role to Host
@@ -480,7 +485,7 @@ installDruidService () {
        	# Add DRUID HISTORICAL role to Host
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/hosts/$HOST1/host_components/DRUID_HISTORICAL
 		
-		echo "*********************************Adding DRUID HISTORICAL role to Host..."
+		    echo "*********************************Adding DRUID HISTORICAL role to Host..."
        	# Add DRUID HISTORICAL role to Host
        	curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/hosts/$HOST2/host_components/DRUID_HISTORICAL
        	
@@ -505,7 +510,7 @@ installDruidService () {
        	# Install DRUID Service
        	TASKID=$(curl -u admin:admin -H "X-Requested-By:ambari" -i -X PUT -d '{"RequestInfo": {"context" :"Install Druid"}, "Body": {"ServiceInfo": {"maintenance_state" : "OFF", "state": "INSTALLED"}}}' http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID | grep "id" | grep -Po '([0-9]+)')
 		
-		sleep 2       	
+		    sleep 2       	
        	if [ -z $TASKID ]; then
        		until ! [ -z $TASKID ]; do
        			TASKID=$(curl -u admin:admin -H "X-Requested-By:ambari" -i -X PUT -d '{"RequestInfo": {"context" :"Install Druid"}, "Body": {"ServiceInfo": {"maintenance_state" : "OFF", "state": "INSTALLED"}}}' http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/DRUID | grep "id" | grep -Po '([0-9]+)')
@@ -527,10 +532,13 @@ installDruidService () {
 }
 
 instalHDFManagementPack () {
+  echo "*********************************WGET MPACK from Hortonworks public-repo-1"
 	wget http://public-repo-1.hortonworks.com/HDF/centos7/3.x/updates/3.0.1.1/tars/hdf_ambari_mp/hdf-ambari-mpack-3.0.1.1-5.tar.gz
-ambari-server install-mpack --mpack=hdf-ambari-mpack-3.0.1.1-5.tar.gz --verbose
+  echo "*********************************Install HDF 3.0.1.1 MPACK"
+  ambari-server install-mpack --mpack=hdf-ambari-mpack-3.0.1.1-5.tar.gz --verbose
 
 	sleep 2
+  echo "*********************************Restart AMBARI Server"
 	ambari-server restart
 	waitForAmbari
 	sleep 2
@@ -557,34 +565,41 @@ configureAmbariRepos (){
 }
 
 installMySQL (){
+  echo "*********************************Remove existing MySQL editions"
 	yum remove -y mysql57-community*
 	yum remove -y mysql56-server*
 	yum remove -y mysql-community*
 	rm -Rvf /var/lib/mysql
 
+  echo "*********************************Install epel-release libffi-devel"
 	yum install -y epel-release
 	yum install -y libffi-devel.x86_64
 	ln -s /usr/lib64/libffi.so.6 /usr/lib64/libffi.so.5
 
+  echo "*********************************Install mysql-connector-java"
 	yum install -y mysql-connector-java*
+  echo "*********************************Set Ambari-Server jdbc-db=mysql"
 	ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java.jar
 
-
+  echo "*********************************If system release is Amazon, then install mysql56-server"
 	if [ $(cat /etc/system-release|grep -Po Amazon) == Amazon ]; then       	
 		yum install -y mysql56-server
 		service mysqld start
 		chkconfig --levels 3 mysqld on
 	else
+    echo "*********************************Service is not Amazon, installing mysql-community-release-el7-5"
 		yum localinstall -y https://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
 		yum install -y mysql-community-server
 		#yum localinstall -y https://dev.mysql.com/get/mysql57-community-release-el7-8.noarch.rpm
-#yum install -y mysql-community-server
+    #yum install -y mysql-community-server
+    echo "*********************************Starting MYSQL.service"
 		systemctl start mysqld.service
 		systemctl enable mysqld.service
 	fi
 }
 
 setupHDFDataStores (){
+  echo "*********************************Creating MySQL Databases, Users, and setting privileges -- Registry, SAM, Druid, Superset"
 	mysql --execute="CREATE DATABASE registry"
 	mysql --execute="CREATE DATABASE streamline"
 	mysql --execute="CREATE DATABASE druid DEFAULT CHARACTER SET utf8"
@@ -635,12 +650,13 @@ export HADOOP_USER_NAME=hdfs
 echo "*********************************HADOOP_USER_NAME set to HDFS"
 
 echo "*********************************Waiting for cluster install to complete..."
+echo "*********************************Starting YARN"
 waitForServiceToStart YARN
-
+echo "*********************************Starting HDFS"
 waitForServiceToStart HDFS
-
+echo "*********************************Starting HIVE"
 waitForServiceToStart HIVE
-
+echo "*********************************Starting Zookeeper"
 waitForServiceToStart ZOOKEEPER
 
 sleep 10
@@ -648,7 +664,9 @@ sleep 10
 export VERSION=`hdp-select status hadoop-client | sed 's/hadoop-client - \([0-9]\.[0-9]\).*/\1/'`
 export INTVERSION=$(echo $VERSION*10 | bc | grep -Po '([0-9][0-9])')
 echo "*********************************HDP VERSION IS: $VERSION"
+echo "*********************************INTVERSION IS: $INTVERSION"
 
+echo "*********************************REPLACING HOST NAMES WITH AMBARI HOST VALUES"
 sed -r -i 's;\{\{mysql_host\}\};'$AMBARI_HOST';' $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/registry-config/registry-common.json
 sed -r -i 's;\{\{mysql_host\}\};'$AMBARI_HOST';' $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-common.json
 sed -r -i 's;\{\{registry_host\}\};'$AMBARI_HOST';' $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/streamline-config/streamline-common.json
@@ -689,12 +707,13 @@ sleep 2
 #sleep 2
 #startService HBASE
 #sleep 2
-
+echo "*********************************Installing Druid"
 installDruidService
 
 sleep 2
+echo "*********************************Checking Druid Status"
 DRUID_STATUS=$(getServiceStatus DRUID)
-echo "*********************************Checking DRUID status..."
+
 if ! [[ $DRUID_STATUS == STARTED || $DRUID_STATUS == INSTALLED ]]; then
        	echo "*********************************DRUID is in a transitional state, waiting..."
        	waitForService DRUID
@@ -703,18 +722,21 @@ fi
 
 sleep 2
 
+echo "*********************************Starting Druid"
 if [[ $DRUID_STATUS == INSTALLED ]]; then
+        echo "*********************************Druid is installed -- Starting Druid"
        	startService DRUID
 else
        	echo "*********************************DRUID Service Started..."
 fi
 
 sleep 2
+echo "*********************************Installing Schema Registry"
 installSchemaRegistryService
 
 sleep 2
+echo "*********************************Checking Schema Registry Status"
 REGISTRY_STATUS=$(getServiceStatus REGISTRY)
-echo "*********************************Checking REGISTRY status..."
 if ! [[ $REGISTRY_STATUS == STARTED || $REGISTRY_STATUS == INSTALLED ]]; then
        	echo "*********************************REGISTRY is in a transitional state, waiting..."
        	waitForService REGISTRY
@@ -722,18 +744,21 @@ if ! [[ $REGISTRY_STATUS == STARTED || $REGISTRY_STATUS == INSTALLED ]]; then
 fi
 
 sleep 2
+echo "*********************************Checking if Registry is Installed"
 if [[ $REGISTRY_STATUS == INSTALLED ]]; then
+        echo "*********************************Registry is Installed -- Starting"
        	startService REGISTRY
 else
        	echo "*********************************REGISTRY Service Started..."
 fi
 
 sleep 2
+echo "*********************************Install SAM"
 installStreamlineService
 
 sleep 2
-STREAMLINE_STATUS=$(getServiceStatus STREAMLINE)
 echo "*********************************Checking STREAMLINE status..."
+STREAMLINE_STATUS=$(getServiceStatus STREAMLINE)
 if ! [[ $STREAMLINE_STATUS == STARTED || $STREAMLINE_STATUS == INSTALLED ]]; then
        	echo "*********************************STREAMLINE is in a transitional state, waiting..."
        	waitForService STREAMLINE
@@ -741,19 +766,21 @@ if ! [[ $STREAMLINE_STATUS == STARTED || $STREAMLINE_STATUS == INSTALLED ]]; the
 fi
 
 sleep 2
-
+echo "********************************Checking if SAM is Installed"
 if [[ $STREAMLINE_STATUS == INSTALLED ]]; then
+        echo "********************************SAM is Installed -- Starting"
        	startService STREAMLINE
 else
        	echo "*********************************STREAMLINE Service Started..."
 fi
 
 sleep 2
+echo "********************************Installing NiFi"
 installNifiService
 
 sleep 2
-NIFI_STATUS=$(getServiceStatus NIFI)
 echo "*********************************Checking NIFI status..."
+NIFI_STATUS=$(getServiceStatus NIFI)
 if ! [[ $NIFI_STATUS == STARTED || $NIFI_STATUS == INSTALLED ]]; then
        	echo "*********************************NIFI is in a transitional state, waiting..."
        	waitForService NIFI
@@ -761,17 +788,19 @@ if ! [[ $NIFI_STATUS == STARTED || $NIFI_STATUS == INSTALLED ]]; then
 fi
 
 sleep 2
-
+echo "*********************************Checking if NiFi is Installed"
 if [[ $NIFI_STATUS == INSTALLED ]]; then
+        echo "*********************************NiFi is Installed -- Starting"
        	startServiceAndComplete NIFI
 else
        	echo "*********************************NIFI Service Started..."
 fi
 
 sleep 25
-
+echo "*********************************Passing Parameters into Ambari Server configs.sh"
 /var/lib/ambari-server/resources/scripts/configs.sh set $AMBARI_HOST $CLUSTER_NAME control-config $ROOT_PATH/northcentral_hackathon/CloudBreakArtifacts/hdf-config/alarmfatigue-config/control-config.json
 
+echo "*********************************Curl POST command to ALARM_FATIGUE_DEMO_CONTROL Ambari Service"
 curl -u admin:admin -H "X-Requested-By:ambari" -i -X POST http://$AMBARI_HOST:8080/api/v1/clusters/$CLUSTER_NAME/services/ALARM_FATIGUE_DEMO_CONTROL
 sleep 2
 
@@ -799,13 +828,14 @@ sleep 2
 ALARM_FATIGUE_STATUS=$(getServiceStatus ALARM_FATIGUE_DEMO_CONTROL)
 echo "*********************************Checking ALARM_FATIGUE_STATUS status..."
 if ! [[ $ALARM_FATIGUE_STATUS == STARTED || $ALARM_FATIGUE_STATUS == INSTALLED ]]; then
-       	echo "*********************************ALARM_FATIGUE_STATUS is in a transitional state, waiting..."
+       	echo "*********************************ALARM_FATIGUE_STATUS is still being installed, waiting..."
        	waitForService ALARM_FATIGUE_DEMO_CONTROL
        	echo "*********************************ALARM_FATIGUE_STATUS has entered a ready state..."
 fi
 
 sleep 20
 
+echo "*********************************Starting ALARM_FATIGUE_DEMO_CONTROL -- This will call alarmfatigue-demo-sam-install.sh -- Logs are in /root/demo-install.log"
 startServiceAndComplete ALARM_FATIGUE_DEMO_CONTROL
 echo "*********************************ALARM_FATIGUE_STATUS Service Started..."
 
