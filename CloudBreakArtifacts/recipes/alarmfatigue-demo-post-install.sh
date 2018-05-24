@@ -108,7 +108,7 @@ waitForService () {
             if [[ "$SERVICE_STATUS" == STARTED || "$SERVICE_STATUS" == INSTALLED ]]; then
                 LOOPESCAPE="true"
             fi
-            echo "*********************************$SERVICE Status: $SERVICE_STATUS"
+            #echo "*********************************$SERVICE Status: $SERVICE_STATUS"
             sleep 2
         done
        	fi
