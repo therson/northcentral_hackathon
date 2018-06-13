@@ -21,13 +21,13 @@
           "emitNullTuples": false,
           "partitionRefreshPeriodMs": 2000,
           "securityProtocol": "PLAINTEXT",
-          "bootstrapServers": "thersonaf26-537-1-0.field.hortonworks.com:6667",
+          "bootstrapServers": "{{HOST1}}:6667",
           "kafkaServiceName": "",
           "retryDelayMaximumMs": 10000,
           "fetchMaximumBytesPerPartition": "1048576",
           "firstPollOffsetStrategy": "UNCOMMITTED_EARLIEST",
           "sslTruststoreType": "JKS",
-          "clusters": "thersonaf26",
+          "clusters": "{{CLUSTERNAME}}",
           "fetchMinimumBytes": "1",
           "consumerStartupDelayMs": 60000,
           "sslKeystoreType": "JKS",
@@ -140,7 +140,7 @@
       "description": "",
       "config": {
         "properties": {
-          "fsUrl": "hdfs://thersonaf26-537-1-0.field.hortonworks.com:8020",
+          "fsUrl": "hdfs://{{HOST1}}:8020",
           "outputFields": [
             "DeviceGUID",
             "DeviceId",
@@ -171,7 +171,7 @@
           "parallelism": 1,
           "topic": "",
           "countPolicyValue": 1,
-          "clusters": "thersonaf26"
+          "clusters": "{{CLUSTERNAME}}"
         }
       },
       "timestamp": 1526583794554
@@ -231,7 +231,7 @@
               }
             }
           ],
-          "tranquilityZKconnect": "thersonaf26-537-1-0.field.hortonworks.com:2181",
+          "tranquilityZKconnect": "{{HOST1}}:2181",
           "discardStreamId": "DRUID-DISCARD-STREAM-ID",
           "indexService": "druid/overlord",
           "blockOnFull": true,
@@ -239,7 +239,7 @@
           "lingerMillis": 0,
           "queryGranularity": "MINUTE",
           "dataSource": "device-event-alerts-cube",
-          "clusters": "thersonaf26",
+          "clusters": "{{CLUSTERNAME}}",
           "dimensions": [
             "DoctorEmail",
             "DeviceGUID",
@@ -343,7 +343,7 @@
               }
             }
           ],
-          "tranquilityZKconnect": "thersonaf26-537-1-0.field.hortonworks.com:2181",
+          "tranquilityZKconnect": "{{HOST1}}:2181",
           "discardStreamId": "DRUID-DISCARD-STREAM-ID",
           "indexService": "druid/overlord",
           "blockOnFull": true,
@@ -351,7 +351,7 @@
           "lingerMillis": 0,
           "queryGranularity": "MINUTE",
           "dataSource": "alarm-fatigue-all-events-cube",
-          "clusters": "thersonaf26",
+          "clusters": "{{CLUSTERNAME}}",
           "dimensions": [
             "DeviceGUID",
             "HealthProviderName",
