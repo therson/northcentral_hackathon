@@ -12,6 +12,9 @@ It all starts on the edge devices, being various sensors in a hospital room (Blo
 
 
 Cloudbreak Deployable
+
 Blueprint: Alarm Fatigue
+
 Node Sizes: m3-xlarge-openstack
+
 Recipes: (1) Ambari Server: preinstall-java8, alarmfatigue-new (2) preinstall-java8 (3) preinstall-java8
