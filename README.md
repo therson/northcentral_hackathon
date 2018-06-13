@@ -9,3 +9,9 @@ Instead of only sounding an alarm, being heard by the closest nurse or doctor, a
  
 What will HDP/HDF do to reduce Alarm Fatigue?
 It all starts on the edge devices, being various sensors in a hospital room (Blood pressure sensor, Heart Rate Sensor, Temperature Sensor, Humidity Sensor).  For this use-case, we will assume our target hospital contains sensors with active connections to raspberry pi device(s), one per room.  The raspberry pi device will gather logs from the sensors, therefore we will install MiNiFi and tail the logs.  MiNiFi will then bi-directionally communicate with a centralized NiFi instance located at the hospital (this is where things get fun). 
+
+
+Cloudbreak Deployable
+Blueprint: Alarm Fatigue
+Node Sizes: m3-xlarge-openstack
+Recipes: (1) Ambari Server: preinstall-java8, alarmfatigue-new (2) preinstall-java8 (3) preinstall-java8
